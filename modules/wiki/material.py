@@ -19,7 +19,7 @@ class Material(WikiModel):
         type: type
         weekdays: Weekly opening hours
         source: method of obtaining
-        description: 
+        description: describe
     """
     type: str
     source: Optional[List[str]] = None
