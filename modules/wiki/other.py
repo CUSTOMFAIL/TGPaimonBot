@@ -14,16 +14,16 @@ __all__ = [
 
 
 class Element(Enum):
-    """元素"""
+    """element"""
 
-    Pyro = "火"
-    Hydro = "水"
-    Electro = "雷"
-    Cryo = "冰"
-    Dendro = "草"
-    Anemo = "风"
-    Geo = "岩"
-    Multi = "无"  # 主角
+    Pyro = "fire"
+    Hydro = "Water"
+    Electro = "Thunder"
+    Cryo = "ice"
+    Dendro = "grass"
+    Anemo = "Wind"
+    Geo = "rock"
+    Multi = "none" # main character
 
 
 _WEAPON_ICON_MAP = {
@@ -36,21 +36,21 @@ _WEAPON_ICON_MAP = {
 
 
 class WeaponType(Enum):
-    """武器类型"""
+    """Weapon Type"""
 
-    Sword = "单手剑"
-    Claymore = "双手剑"
-    Polearm = "长柄武器"
-    Catalyst = "法器"
-    Bow = "弓"
+    Sword = "One-Handed Sword"
+    Claymore = "two-handed sword"
+    Polearm = "Polearm"
+    Catalyst = "Magic"
+    Bow = "Bow"
 
     def icon_url(self) -> str:
         return str(_WEAPON_ICON_MAP.get(self.name))
 
 
 _ATTR_TYPE_MAP = {
-    # 这个字典用于将 Honey 页面中遇到的 属性的缩写的字符 转为 AttributeType 的字符
-    # 例如 Honey 页面上写的 HP% 则对应 HP_p
+    # This dictionary is used to convert the abbreviated characters of attributes encountered in Honey pages to characters of AttributeType
+    # For example, HP% written on the Honey page corresponds to HP_p
     "HP": ["Health"],
     "HP_p": ["HP%", "Health %"],
     "ATK": ["Attack"],
@@ -74,27 +74,27 @@ _ATTR_TYPE_MAP = {
 
 
 class AttributeType(Enum):
-    """属性枚举类。包含了武器和圣遗物的属性。"""
+    """Attribute enumeration class. Contains attributes of weapons and relics."""
 
-    HP = "生命"
-    HP_p = "生命%"
-    ATK = "攻击力"
-    ATK_p = "攻击力%"
-    DEF = "防御力"
-    DEF_p = "防御力%"
-    EM = "元素精通"
-    ER = "元素充能效率"
-    CR = "暴击率"
-    CD = "暴击伤害"
-    PD = "物理伤害加成"
-    HB = "治疗加成"
-    Pyro = "火元素伤害加成"
-    Hydro = "水元素伤害加成"
-    Electro = "雷元素伤害加成"
-    Cryo = "冰元素伤害加成"
-    Dendro = "草元素伤害加成"
-    Anemo = "风元素伤害加成"
-    Geo = "岩元素伤害加成"
+    HP = "Life"
+    HP_p = "Life %"
+    ATK = "Attack Power"
+    ATK_p = "Attack Power%"
+    DEF = "Defense Strength"
+    DEF_p = "Defense %"
+    EM = "Elemental Mastery"
+    ER = "Elemental Charge Efficiency"
+    CR = "Crit Chance"
+    CD = "Critical Damage"
+    PD = "Physical Damage Bonus"
+    HB = "Healing Bonus"
+    Pyro = "Fire Elemental Damage Bonus"
+    Hydro = "Water Elemental Damage Bonus"
+    Electro = "Lightning Elemental Damage Bonus"
+    Cryo = "Ice Elemental Damage Bonus"
+    Dendro = "Grass Elemental Damage Bonus"
+    Anemo = "Wind Elemental Damage Bonus"
+    Geo = "Rock Elemental Damage Bonus"
 
     @classmethod
     def convert(cls, string: str) -> Optional[Self]:
@@ -115,14 +115,14 @@ _ASSOCIATION_MAP = {
 
 
 class Association(Enum):
-    """角色所属地区"""
+    """The region the character belongs to"""
 
-    Other = "其它"
-    Snezhnaya = "至冬"
-    Sumeru = "须弥"
-    Inazuma = "稻妻"
-    Liyue = "璃月"
-    Mondstadt = "蒙德"
+    Other = "Other"
+    Snezhnaya = "Winter"
+    Sumeru = "Sumi"
+    Inazuma = "Inazuma"
+    Liyue = "Liyue"
+    Mondstadt = "Mondstadt"
 
     @classmethod
     def convert(cls, string: str) -> Optional[Self]:
