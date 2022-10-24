@@ -3,33 +3,32 @@ import enum
 class FightProp(enum.Enum):
 
     BASE_HP = "Base HP"
-
     FIGHT_PROP_BASE_ATTACK = "Base Attack Power"
-
     FIGHT_PROP_BASE_DEFENSE = "Base Defense"
-
     FIGHT_PROP_BASE_HP = "Base HP"
-
     FIGHT_PROP_ATTACK = "Attack Power"
-
     FIGHT_PROP_ATTACK_PERCENT = "Attack Power Percentage"
-
     FIGHT_PROP_HP = "HP"
-
     FIGHT_PROP_HP_PERCENT = "Percent Health"
-
     FIGHT_PROP_DEFENSE = "Defense"
-
     FIGHT_PROP_DEFENSE_PERCENT = "Defense Percentage"
-
     FIGHT_PROP_ELEMENT_MASTERY = "Elemental Mastery"
-
     FIGHT_PROP_CRITICAL = "Critical Chance"
-
     FIGHT_PROP_CRITICAL_HURT = "Critical Damage"
-
     FIGHT_PROP_CHARGE_EFFICIENCY = "Elemental Charge Efficiency"
+    
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
     FIGHT_PROP_FIRE_SUB_HURT = "Fire Resistance"
 
     FIGHT_PROP_ELEC_SUB_HURT = "Lightning Resistance"
