@@ -25,7 +25,7 @@ class ArtifactStatsTheory:
                 FightProp.FIGHT_PROP_CRITICAL_HURT,
                 FightProp.FIGHT_PROP_ATTACK_PERCENT,
             ]
-        # 修正要评分的数值词条
+        # Correct the numerical terms to be graded
         if FightProp.FIGHT_PROP_ATTACK_PERCENT in self.main_prop and FightProp.FIGHT_PROP_ATTACK not in self.main_prop:
             self.main_prop.append(FightProp.FIGHT_PROP_ATTACK)
         if FightProp.FIGHT_PROP_HP_PERCENT in self.main_prop and FightProp.FIGHT_PROP_HP not in self.main_prop:
@@ -37,11 +37,11 @@ class ArtifactStatsTheory:
             self.main_prop.append(FightProp.FIGHT_PROP_DEFENSE)
 
     def theory(self, sub_stats: EquipmentsStats) -> float:
-        """圣遗物副词条评分
+        """Holy Relic Adverbs Score
         Args:
-            sub_stats: 圣遗物对象
+            sub_stats: Holy relic object
         Returns:
-            返回得分
+            return score
         """
         score: float = 0
         if sub_stats.prop_id in map(lambda x: x.name, self.main_prop):
