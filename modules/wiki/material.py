@@ -6,7 +6,7 @@ from httpx import URL
 
 from modules.wiki.base import HONEY_HOST, WikiModel
 
-__all__ = ["Material"]
+all = ["Material"]
 
 WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
@@ -60,12 +60,12 @@ class Material(WikiModel):
         if (item_source := get_table_row("Item Source")) is not None:
             item_source = list(
                 # filter 在这里的作用是过滤掉为空的数据
-                filter(lambda x: x, item_source.encode_contents().decode().split("<br/>"))
+                filter(lambda x: x, item_source.encode_contents().decode().split(""))
             )
         if (alter_source := get_table_row("Alternative Item")) is not None:
             alter_source = list(
                 # filter 在这里的作用是过滤掉为空的数据
-                filter(lambda x: x, alter_source.encode_contents().decode().split("<br/>"))
+                filter(lambda x: x, alter_source.encode_contents().decode().split(""))
             )
         source = list(sorted(set((item_source or []) + (alter_source or []))))
         if (weekdays := get_table_row("Weekday")) is not None:
