@@ -13,13 +13,13 @@ WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
 class Material(WikiModel):
     # noinspection PyUnresolvedReferences
-    """武器、角色培养素材
+    """Weapons, character training materials
 
     Attributes:
-        type: 类型
-        weekdays: 每周开放的时间
-        source: 获取方式
-        description: 描述
+        type: type
+        weekdays: Weekly opening hours
+        source: method of obtaining
+        description: 
     """
     type: str
     source: Optional[List[str]] = None
@@ -38,19 +38,19 @@ class Material(WikiModel):
 
     @classmethod
     async def _parse_soup(cls, soup: BeautifulSoup) -> "Material":
-        """解析突破素材页"""
+        """Parse the breakthrough material page"""
         soup = soup.select(".wp-block-post-content")[0]
         tables = soup.find_all("table")
         table_rows = tables[0].find_all("tr")
 
         def get_table_row(target: str):
-            """一个便捷函数，用于返回对应表格头的对应行的最后一个单元格中的文本"""
+            """A convenience function that returns the text in the last cell of the corresponding row of the corresponding table header"""
             for row in table_rows:
                 if target in row.find("td").text:
                     return row.find_all("td")[-1]
 
         def get_table_text(row_num: int) -> str:
-            """一个便捷函数，用于返回表格对应行的最后一个单元格中的文本"""
+            """A convenience function that returns the text in the last cell of the corresponding row of the table"""
             return table_rows[row_num].find_all("td")[-1].text.replace("\xa0", "")
 
         id_ = re.findall(r"/img/(.*?)\.webp", str(table_rows[0]))[0]
@@ -59,12 +59,12 @@ class Material(WikiModel):
         type_ = get_table_text(1)
         if (item_source := get_table_row("Item Source")) is not None:
             item_source = list(
-                # filter 在这里的作用是过滤掉为空的数据
+                # filter The role here is to filter out empty data
                 filter(lambda x: x, item_source.encode_contents().decode().split(""))
             )
         if (alter_source := get_table_row("Alternative Item")) is not None:
             alter_source = list(
-                # filter 在这里的作用是过滤掉为空的数据
+                # filter The role here is to filter out empty data
                 filter(lambda x: x, alter_source.encode_contents().decode().split(""))
             )
         source = list(sorted(set((item_source or []) + (alter_source or []))))
