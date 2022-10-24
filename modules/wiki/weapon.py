@@ -12,18 +12,18 @@ __all__ = ["Weapon", "WeaponAffix", "WeaponAttribute"]
 
 
 class WeaponAttribute(Model):
-    """武器词条"""
+    """Weapon entry"""
 
     type: AttributeType
     value: str
 
 
 class WeaponAffix(Model):
-    """武器技能
+    """Weapon Skills
 
     Attributes:
-        name: 技能名
-        description: 技能描述
+        name: skill name
+        description: skill description
 
     """
 
@@ -44,16 +44,16 @@ class WeaponIcon(Model):
 
 
 class Weapon(WikiModel):
-    """武器
+    """arms
 
     Attributes:
-        weapon_type: 武器类型
-        attack: 基础攻击力
+        weapon_type: weapon type
+        attack: base attack power
         attribute:
-        affix: 武器技能
-        description: 描述
-        ascension: 突破材料
-        story: 武器故事
+        affix: weapon skill
+        description: description
+        ascension: breakthrough material
+        story: weapon story
     """
 
     weapon_type: WeaponType
@@ -72,17 +72,17 @@ class Weapon(WikiModel):
 
     @classmethod
     async def _parse_soup(cls, soup: BeautifulSoup) -> "Weapon":
-        """解析武器页"""
+        """Analysis weapon page"""
         soup = soup.select(".wp-block-post-content")[0]
         tables = soup.find_all("table")
         table_rows = tables[0].find_all("tr")
 
         def get_table_text(row_num: int) -> str:
-            """一个快捷函数，用于返回表格对应行的最后一个单元格中的文本"""
+            """A shortcut function to return the text in the last cell of the corresponding row of the table"""
             return table_rows[row_num].find_all("td")[-1].text.replace("\xa0", "")
 
         def find_table(select: str):
-            """一个快捷函数，用于寻找对应表格头的表格"""
+            """A shortcut function to find the table corresponding to the table header"""
             return list(filter(lambda x: select in " ".join(x.attrs["class"]), tables))
 
         id_ = re.findall(r"/img/(.*?)_gacha", str(table_rows[0]))[0]
@@ -91,7 +91,7 @@ class Weapon(WikiModel):
         rarity = len(table_rows[2].find_all("img"))
         attack = float(get_table_text(4))
         ascension = [re.findall(r"/(.*)/", tag.attrs["href"])[0] for tag in table_rows[-1].find_all("a")]
-        if rarity > 2:  # 如果是 3 星及其以上的武器
+        if rarity > 2: # if it is a weapon of 3 stars and above
             attribute = WeaponAttribute(
                 type=AttributeType.convert(tables[2].find("thead").find("tr").find_all("td")[2].text.split(" ")[1]),
                 value=get_table_text(6),
@@ -104,8 +104,8 @@ class Weapon(WikiModel):
                 story = story_table[0].text.strip()
             else:
                 story = None
-        else:  # 如果是 2 星及其以下的武器
-            attribute = affix = None
+        else: # If it is a weapon of 2 stars and below
+            attribute=affix=None
             description = get_table_text(5)
             story = tables[-1].text.strip()
         stats = []
@@ -131,7 +131,7 @@ class Weapon(WikiModel):
 
     @classmethod
     async def get_name_list(cls, *, with_url: bool = False) -> List[Union[str, Tuple[str, URL]]]:
-        # 重写此函数的目的是名字去重，例如单手剑页面中有三个 “「一心传」名刀”
+        # The purpose of rewriting this function is to de-duplicate the name. For example, there are three ""One Heart" Famous Swords in the one-handed sword page.
         name_list = [i async for i in cls._name_list_generator(with_url=with_url)]
         if with_url:
             return [(i[0], list(i[1])[0][1]) for i in itertools.groupby(name_list, lambda x: x[0])]
