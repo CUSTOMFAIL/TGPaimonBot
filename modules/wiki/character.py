@@ -10,10 +10,10 @@ from modules.wiki.other import Association, Element, WeaponType
 
 
 class Birth(Model):
-    """生日
+    """Birthday
     Attributes:
-        day: 天
-        month: 月
+        day: day
+        month: month
     """
 
     day: int
@@ -21,11 +21,11 @@ class Birth(Model):
 
 
 class CharacterAscension(Model):
-    """角色的突破材料
+    """Breakthrough material for characters
 
     Attributes:
-        level: 等级突破材料
-        skill: 技能/天赋培养材料
+        level: level breakthrough material
+        skill: Skill/talent training materials
     """
 
     level: List[str] = []
@@ -33,16 +33,16 @@ class CharacterAscension(Model):
 
 
 class CharacterState(Model):
-    """角色属性值
+    """Role attribute value
 
     Attributes:
-        level: 等级
-        HP: 生命
-        ATK: 攻击力
-        DEF: 防御力
-        CR: 暴击率
-        CD: 暴击伤害
-        bonus: 突破属性
+        level: level
+        HP: life
+        ATK: Attack Power
+        DEF: Defense
+        CR: Critical Strike Chance
+        CD: Crit Damage
+        bonus: Breakthrough attribute
     """
 
     level: str
@@ -62,20 +62,20 @@ class CharacterIcon(Model):
 
 
 class Character(WikiModel):
-    """角色
+    """Role
     Attributes:
-        title: 称号
-        occupation: 所属
-        association: 地区
-        weapon_type: 武器类型
-        element: 元素
-        birth: 生日
-        constellation: 命之座
-        cn_cv: 中配
-        jp_cv: 日配
-        en_cv: 英配
-        kr_cv: 韩配
-        description: 描述
+        title: title
+        occupation: belonging to
+        association: region
+        weapon_type: weapon type
+        element: element
+        birth: birthday
+        constellation: the seat of fate
+        cn_cv: Middle match
+        jp_cv: Japanese match
+        en_cv: British match
+        kr_cv: Korean partner
+        description: description
     """
 
     id: str
@@ -101,18 +101,18 @@ class Character(WikiModel):
 
     @classmethod
     async def _parse_soup(cls, soup: BeautifulSoup) -> "Character":
-        """解析角色页"""
+        """Analysis role page"""
         soup = soup.select(".wp-block-post-content")[0]
         tables = soup.find_all("table")
         table_rows = tables[0].find_all("tr")
 
         def get_table_text(row_num: int) -> str:
-            """一个快捷函数，用于返回表格对应行的最后一个单元格中的文本"""
+            """A shortcut function to return the text in the last cell of the corresponding row of the table"""
             return table_rows[row_num].find_all("td")[-1].text.replace("\xa0", "")
 
         id_ = re.findall(r"img/(.*?_\d+)_.*", table_rows[0].find("img").attrs["src"])[0]
         name = get_table_text(0)
-        if name != "旅行者":  # 如果角色名不是 旅行者
+        if name != "traveler": # if the character name is not a traveler
             title = get_table_text(1)
             occupation = get_table_text(2)
             association = Association.convert(get_table_text(3).lower().title())
@@ -126,7 +126,7 @@ class Character(WikiModel):
             en_cv = get_table_text(13)
             kr_cv = get_table_text(14)
         else:
-            name = "空" if id_.endswith("5") else "荧"
+            name = "empty" if id_.endswith("5") else "fluorescence"
             title = get_table_text(0)
             occupation = get_table_text(1)
             association = Association.convert(get_table_text(2).lower().title())
@@ -144,7 +144,7 @@ class Character(WikiModel):
             level=[
                 target[0]
                 for i in table_rows[-2].find_all("a")
-                if (target := re.findall(r"/(.*)/", i.attrs["href"]))  # 过滤掉错误的材料(honey网页的bug)
+                if (target := re.findall(r"/(.*)/", i.attrs["href"])) # filter out wrong material (bug of honey web page)
             ],
             skill=[re.findall(r"/(.*)/", i.attrs["href"])[0] for i in table_rows[-1].find_all("a")],
         )
@@ -182,19 +182,19 @@ class Character(WikiModel):
             stats=stats,
         )
 
-    @classmethod
-    async def get_url_by_name(cls, name: str) -> Optional[URL]:
-        # 重写此函数的目的是处理主角名字的 ID
-        _map = {"荧": "playergirl_007", "空": "playerboy_005"}
-        if (id_ := _map.get(name)) is not None:
-            return await cls.get_url_by_id(id_)
-        return await super(Character, cls).get_url_by_name(name)
+     @classmethod
+     async def get_url_by_name(cls, name: str) -> Optional[URL]:
+         # The purpose of overriding this function is to handle the ID of the main character's name
+         _map = {"Ying": "playergirl_007", "empty": "playerboy_005"}
+         if (id_ := _map.get(name)) is not None:
+             return await cls.get_url_by_id(id_)
+         return await super(Character, cls).get_url_by_name(name)
 
-    @property
-    def icon(self) -> CharacterIcon:
-        return CharacterIcon(
-            icon=str(HONEY_HOST.join(f"/img/{self.id}_icon.webp")),
-            side=str(HONEY_HOST.join(f"/img/{self.id}_side_icon.webp")),
-            gacha=str(HONEY_HOST.join(f"/img/{self.id}_gacha_card.webp")),
-            splash=str(HONEY_HOST.join(f"/img/{self.id}_gacha_splash.webp")),
-        )
+     @property
+     def icon(self) -> CharacterIcon:
+         return CharacterIcon(
+             icon=str(HONEY_HOST.join(f"/img/{self.id}_icon.webp")),
+             side=str(HONEY_HOST.join(f"/img/{self.id}_side_icon.webp")),
+             gacha=str(HONEY_HOST.join(f"/img/{self.id}_gacha_card.webp")),
+             splash=str(HONEY_HOST.join(f"/img/{self.id}_gacha_splash.webp")),
+         )
